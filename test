@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3차 입고 EVENT</title>
+    <style>
+        /* CSS 스타일 생략 (이전 답변과 동일) */
+        @font-face {
+            font-family: 'Pretandard Regular';
+            src: url('Pretendard-Regular.woff2') format('woff2');
+        }
+        /* ... */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="line">1차 입고수량 (완판)</div>
+        <div class="timer" id="timer">마감 --:--:--</div>
+    </div>
+
+    <script>
+        // JavaScript 코드 (이전 답변과 동일)
+        document.addEventListener("DOMContentLoaded", function () {
+            const koreaTime = getKoreaTime();
+            const month = koreaTime.getMonth() + 1;
+            const date = koreaTime.getDate();
+            document.getElementById("event-date").innerText = `${month}/${date} 오늘만 할인!`;
+
+            updateKSTTimer();
+            setInterval(updateKSTTimer, 1000);
+        });
+
+        function getKoreaTime() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            return new Date(utc + (9 * 60 * 60 * 1000));
+        }
+
+        function updateKSTTimer() {
+            const koreaNow = getKoreaTime();
+            const endOfDay = new Date(koreaNow);
+            endOfDay.setHours(23, 59, 59, 999);
+            const diff = endOfDay - koreaNow;
+
+            const timerElement = document.getElementById("timer");
+
+            if (diff <= 0) {
+                timerElement.innerText = "마감 00:00:00";
+                return;
+            }
+
+            const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0");
+            const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
+            const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
+            
+            timerElement.innerText = `마감 ${hours}:${minutes}:${seconds}`;
+        }
+    </script>
+</body>
+</html>
